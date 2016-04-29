@@ -13,6 +13,7 @@ class Game(object):
         self.black = (0,0,0)
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
+        self.screenRect = pygame.Rect(-100, -100, self.width + 200, self.height + 200)
 
         #2 Initialize game objects
         self.character = Character(self)
@@ -25,33 +26,16 @@ class Game(object):
             self.clock.tick(60)
         
             #5 Handle user input
-            self.handleInput()
+            #self.character.handleInput()
     
             #6 Tick all objects
             self.character.tick()
             
             #7 Update screen display
             self.screen.fill(self.black)
-            self.screen.blit(self.platform.image, self.platform.rect)
+            self.screen.blit(self.platform.image, pygame.Rect(0,500,self.width, 20))
             self.screen.blit(self.character.image, self.character.rect)
             pygame.display.flip()
-
-    def handleInput(self):
-        for event in pygame.event.get():
-            #if the user clicks the x
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit(0)
-            #The user presses a button
-            elif event.type == pygame.KEYDOWN:
-                if event.key == K_LEFT:
-                    self.character.move('left')
-                elif event.key == K_RIGHT:
-                    self.character.move('right')
-                elif event.key == K_UP:
-                    self.character.move('up')
-                elif event.key == K_DOWN:
-                    self.character.move('down')
 
 if __name__ == '__main__':
     game = Game()
