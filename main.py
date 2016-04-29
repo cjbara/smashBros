@@ -35,10 +35,10 @@ class Game(object):
             
             #7 Update screen display
             self.screen.fill(self.black)
+            pygame.draw.rect(self.screen, (0,0, 255), self.platform.rect)
             self.character.displayLives()
             self.character.displayDamage()
             self.character.displayPlayerName()
-            self.screen.blit(self.platform.image, pygame.Rect(0,500,self.width, 20))
             self.screen.blit(self.character.image, self.character.rect)
             pygame.display.flip()
 

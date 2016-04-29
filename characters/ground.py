@@ -9,7 +9,7 @@ class Ground(pygame.sprite.Sprite):
         self.game = game
 
         self.image = pygame.image.load("media/platform.png")
-        self.rect = self.image.get_rect()
+        self.rect = pygame.Rect(self.game.width/6, 550, 2*self.game.width/3, self.game.height)
 
     def tick(self):
         pass
