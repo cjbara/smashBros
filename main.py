@@ -4,6 +4,7 @@ import math
 sys.path.append('/afs/nd.edu/user37/cmc/Public/paradigms/python/local/lib/python2.6/site-packages/pygame-1.9.1release-py2.6-linux-x86_64.egg')
 import pygame
 from pygame.locals import *
+from pygame import font
 from characters import *
 
 class Game(object):
@@ -18,7 +19,8 @@ class Game(object):
         #2 Initialize game objects
         self.character = Character(self)
         self.platform = Ground(self)
-        
+
+
     def main(self):
         #3 Start game loop
         while(1):
@@ -33,6 +35,9 @@ class Game(object):
             
             #7 Update screen display
             self.screen.fill(self.black)
+            self.character.displayLives()
+            self.character.displayDamage()
+            self.character.displayPlayerName()
             self.screen.blit(self.platform.image, pygame.Rect(0,500,self.width, 20))
             self.screen.blit(self.character.image, self.character.rect)
             pygame.display.flip()

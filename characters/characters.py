@@ -2,9 +2,19 @@ import sys
 import os
 import pygame
 from pygame.locals import *
+from pygame import font
+from labels import *
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, game=None):
+        # make labels
+        self.livesLabel = Label() 
+        self.damageLabel = Label() 
+        self.playerNameLabel = Label() 
+
+        # set player name
+        self.playerName = 'Player 1'
+
         #initialize sprite object
         pygame.sprite.Sprite.__init__(self)
         self.game = game
@@ -38,6 +48,18 @@ class Character(pygame.sprite.Sprite):
         self.onGround = False
         self.jumpsRemaining = self.maxJumps
 
+    def displayPlayerName(self):
+        self.playerNameLabel.display(str(self.playerName), 45) 
+        newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5, self.rect.centery - (4/5.)*self.rect.height, 200, 100)
+        self.game.screen.blit(self.playerNameLabel.image, newRect)
+    
+    def displayLives(self):
+        self.livesLabel.display('Lives: ' + str(self.lives), 55) 
+        self.game.screen.blit(self.livesLabel.image, pygame.Rect(75, 60, 100, 100))
+    
+    def displayDamage(self):
+        self.damageLabel.display(str(self.damage) + '%', 55) 
+        self.game.screen.blit(self.damageLabel.image, pygame.Rect(75, 120, 100, 100))
 
     def move(self, button):
         """Function to handle movement from input"""
@@ -112,4 +134,3 @@ class Character(pygame.sprite.Sprite):
 
         self.rect.center = (self.xpos, self.ypos)
         self.checkDeath()
-            
