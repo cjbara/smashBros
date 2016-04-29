@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 from pygame import font
 from labels import *
+from projectile import *
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, game=None):
@@ -11,6 +12,9 @@ class Character(pygame.sprite.Sprite):
         self.livesLabel = Label() 
         self.damageLabel = Label() 
         self.playerNameLabel = Label() 
+
+        # make array of projectiles
+        self.projectiles = []
 
         # set player name
         self.playerName = 'Player 1'
@@ -81,6 +85,8 @@ class Character(pygame.sprite.Sprite):
 
     def Battack(self):
         print 'B attack'
+        newProjectile = Projectile(self.rect.center)
+        self.projectiles.append(newProjectile)
 
     def mapCollision(self):
         c = self.rect
@@ -172,6 +178,13 @@ class Character(pygame.sprite.Sprite):
                     self.Battack()
                 elif event.key == pygame.K_q:
                     sys.exit()
-                    
+
+        # loop through projectiles
+        print 'before for'
+        for p in self.projectiles:
+            print 'p'
+            p.tick()
+            self.game.screen.blit(p.image, p.getRect())
+
         self.rect.center = (self.xpos, self.ypos)
         self.checkDeath()
