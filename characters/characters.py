@@ -95,9 +95,9 @@ class Character(pygame.sprite.Sprite):
         if c.left > m.right: right = True
         if c.right < m.left: left = True
         if above or below or left or right:
-            if left:
+            if left and not above:
                 self.offLeft = True
-            if right:
+            if right and not above:
                 self.offRight = True
             self.ypos += self.yvel
 
