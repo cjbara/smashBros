@@ -1,6 +1,7 @@
 import sys
 import os
 import math
+sys.path.append('/afs/nd.edu/user37/cmc/Public/paradigms/python/local/lib/python2.6/site-packages/pygame-1.9.1release-py2.6-linux-x86_64.egg')
 import pygame
 from pygame.locals import *
 from characters import *
