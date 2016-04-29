@@ -90,16 +90,16 @@ class Character(pygame.sprite.Sprite):
         above = below = left = right = False
 
         if c.top > m.bottom: below = True
-        if c.bottom < m.top: above = True
+        if c.bottom < m.top:
+            above = True
+            self.offRight = self.offLeft = False
         if c.left > m.right: right = True
         if c.right < m.left: left = True
         if above or below or left or right:
             if left:
                 self.offLeft = True
-                print 'offLeft'
             if right:
                 self.offRight = True
-                print 'off Right'
             return False # There is no collision
         
         if c.bottom >= m.top and c.top < m.top and self.offRight == False and self.offLeft == False:
@@ -109,11 +109,13 @@ class Character(pygame.sprite.Sprite):
             topCollision = True
 
         if c.left <= m.right and c.right > m.left and topCollision == False:
-            print 'Right collide'
+            if self.offRight:
+                self.xpos +=10
             rightCollision = True
 
-        if c.right >= m.left and c.left > m.right and topCollision == False:
-            print 'Left collide'
+        if c.right >= m.left and c.left < m.right and topCollision == False:
+            if self.offLeft:
+                self.xpos -= 10
             leftCollision = True
 
     def gravity(self):
@@ -138,6 +140,7 @@ class Character(pygame.sprite.Sprite):
         (self.xvel, self.yvel) = self.startVel
         self.rect.center = (self.xpos, self.ypos)
         self.damage = self.startDamage
+        self.offRight = self.offLeft = False
         
     def moveRight(self, right):
         if right == True:
