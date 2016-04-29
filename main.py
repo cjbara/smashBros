@@ -15,6 +15,7 @@ class Game(object):
 
         #2 Initialize game objects
         self.character = Character(self)
+        self.platform = Ground(self)
         
     def main(self):
         #3 Start game loop
@@ -30,6 +31,7 @@ class Game(object):
             
             #7 Update screen display
             self.screen.fill(self.black)
+            self.screen.blit(self.platform.image, self.platform.rect)
             self.screen.blit(self.character.image, self.character.rect)
             pygame.display.flip()
 
