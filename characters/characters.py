@@ -65,9 +65,13 @@ class Character(pygame.sprite.Sprite):
 # ================== Display Functions ==================
     def displayProjectiles(self):
         # loop through projectiles
+        newProjectiles = [] 
         for p in self.projectiles:
-            p.tick()
-            self.game.screen.blit(p.image, p.getRect())
+            if p.isOnScreen():
+                p.tick()
+                self.game.screen.blit(p.image, p.getRect())
+                newProjectiles.append(p) # dealloc unnecessary projectiles
+        self.projectiles = newProjectiles
 
     def displayPlayerName(self):
         self.playerNameLabel.display(str(self.playerName), 45) 
@@ -89,6 +93,7 @@ class Character(pygame.sprite.Sprite):
             self.image = self.marioImageRight    
 
 # ================= Movement functions ====================
+    
     def jump(self):
         if self.jumpsRemaining > 0:
             print 'Jumping'
@@ -145,7 +150,7 @@ class Character(pygame.sprite.Sprite):
             leftCollision = True
 
     def moveVertical(self):
-        #Apply gravity
+        # Apply gravity
         self.yvel += self.gravity
         
     def checkDeath(self):
@@ -172,7 +177,7 @@ class Character(pygame.sprite.Sprite):
             self.xpos -= 10
 
     def tick(self):
-        #Get the right/left movement
+        # Get the right/left movement
         keys = pygame.key.get_pressed()
         if keys[K_LEFT] and keys[K_RIGHT]:
             pass

@@ -10,8 +10,9 @@ class Projectile(pygame.sprite.Sprite):
         # initialize sprite object
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-       
-        # remember direction
+
+        # starts on screen, facing left
+        self.onScreen = True
         self.isFacingLeft = isFacingLeft
 
         # create the images
@@ -26,8 +27,19 @@ class Projectile(pygame.sprite.Sprite):
         (self.xpos, self.ypos) = self.startPos
         (self.xvel, self.yvel) = self.startVel
 
+# ====================== Getters and Setters ====================
+
+    def isOnScreen(self):
+        return self.onScreen
+
     def getRect(self):
         return self.rect
+
+# ====================== Movement functions ===================
+
+
+    def rotate(self):
+        pass
 
     def moveRight(self):
         self.xpos += 40
@@ -35,7 +47,19 @@ class Projectile(pygame.sprite.Sprite):
     def moveLeft(self):
         self.xpos -= 40
 
+    def checkOnScreen(self):
+        if (self.rect.centerx > 1000) or (self.rect.centerx < 0):
+            self.onScreen = False
+        elif (self.rect.centery > 750) or (self.rect.centery < 0):
+            self.onScreen = False
+        else:
+            self.onScreen = True
+
     def tick(self):
+        # check on screen
+        self.checkOnScreen()
+
+        # move in the correct direction
         if self.isFacingLeft:
             self.moveLeft()
         else:
