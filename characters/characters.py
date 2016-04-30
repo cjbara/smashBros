@@ -13,6 +13,9 @@ class Character(pygame.sprite.Sprite):
         self.damageLabel = Label() 
         self.playerNameLabel = Label() 
 
+        # starts facing left
+        self.isFacingLeft = True
+
         # make array of projectiles
         self.projectiles = []
 
@@ -29,6 +32,8 @@ class Character(pygame.sprite.Sprite):
         self.green = pygame.image.load("media/green.png")
 
         self.image = pygame.image.load("media/mario.png")
+        self.marioImageLeft = pygame.image.load("media/mario.png")
+        self.marioImageRight = pygame.transform.flip(self.marioImageLeft, True, False)
         self.rect = self.image.get_rect()
 
         # Reset variables
@@ -58,6 +63,12 @@ class Character(pygame.sprite.Sprite):
         self.isOnGround = False
 
 # ================== Display Functions ==================
+    def displayProjectiles(self):
+        # loop through projectiles
+        for p in self.projectiles:
+            p.tick()
+            self.game.screen.blit(p.image, p.getRect())
+
     def displayPlayerName(self):
         self.playerNameLabel.display(str(self.playerName), 45) 
         newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5, self.rect.centery - (4/5.)*self.rect.height, 200, 100)
@@ -70,6 +81,12 @@ class Character(pygame.sprite.Sprite):
     def displayDamage(self):
         self.damageLabel.display(str(self.damage) + '%', 55) 
         self.game.screen.blit(self.damageLabel.image, pygame.Rect(75, 120, 100, 100))
+
+    def updateImageDirection(self):
+        if self.isFacingLeft:
+            self.image = self.marioImageLeft    
+        else:
+            self.image = self.marioImageRight    
 
 # ================= Movement functions ====================
     def jump(self):
@@ -84,7 +101,7 @@ class Character(pygame.sprite.Sprite):
 
     def Battack(self):
         print 'B attack'
-        newProjectile = Projectile(self.rect.center)
+        newProjectile = Projectile(self.rect.center, self.isFacingLeft)
         self.projectiles.append(newProjectile)
 
     def platformCollision(self):
@@ -154,23 +171,19 @@ class Character(pygame.sprite.Sprite):
         else:
             self.xpos -= 10
 
-    def displayProjectiles(self):
-        # loop through projectiles
-        for p in self.projectiles:
-            p.tick()
-            self.game.screen.blit(p.image, p.getRect())
-            #pygame.display.flip()
-
-
     def tick(self):
         #Get the right/left movement
         keys = pygame.key.get_pressed()
         if keys[K_LEFT] and keys[K_RIGHT]:
             pass
         elif keys[K_LEFT]:
+            self.isFacingLeft = True
             self.moveRight(False)
         elif keys[K_RIGHT]:
+            self.isFacingLeft = False
             self.moveRight(True)
+
+        self.updateImageDirection() # TODO doesn't really have to be updated every tick
 
         self.moveVertical()
         self.platformCollision()
