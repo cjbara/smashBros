@@ -11,12 +11,10 @@ class Projectile(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         
-        print 'init of projectile'
-
         #create the images
-        self.green = pygame.image.load("media/green.png")
-        self.image = self.green
-        self.rect = self.image.get_rect()
+        fireball = pygame.image.load("media/fireball.png")
+        self.image = pygame.transform.scale(fireball, (60, 60))
+        self.rect = pygame.Rect(0, 0, 60, 60)
 
         # Reset variables
         self.startPos = startPos
@@ -26,12 +24,10 @@ class Projectile(pygame.sprite.Sprite):
         (self.xvel, self.yvel) = self.startVel
 
     def getRect(self):
-        print 'returning self.rect =', self.rect
         return self.rect
 
     def moveRight(self):
-        print 'moving right'
-        self.xpos += 10
+        self.xpos += 40
 
     def tick(self):
         self.moveRight()

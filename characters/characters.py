@@ -154,6 +154,14 @@ class Character(pygame.sprite.Sprite):
         else:
             self.xpos -= 10
 
+    def displayProjectiles(self):
+        # loop through projectiles
+        for p in self.projectiles:
+            p.tick()
+            self.game.screen.blit(p.image, p.getRect())
+            #pygame.display.flip()
+
+
     def tick(self):
         #Get the right/left movement
         keys = pygame.key.get_pressed()
@@ -178,13 +186,6 @@ class Character(pygame.sprite.Sprite):
                     self.Battack()
                 elif event.key == pygame.K_q:
                     sys.exit()
-
-        # loop through projectiles
-        print 'before for'
-        for p in self.projectiles:
-            print 'p'
-            p.tick()
-            self.game.screen.blit(p.image, p.getRect())
-
+        
         self.rect.center = (self.xpos, self.ypos)
         self.checkDeath()

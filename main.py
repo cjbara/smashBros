@@ -36,6 +36,7 @@ class Game(object):
             #7 Update screen display
             self.screen.fill(self.black)
             pygame.draw.rect(self.screen, (0,0, 255), self.platform.rect)
+            self.character.displayProjectiles()
             self.character.displayLives()
             self.character.displayDamage()
             self.character.displayPlayerName()
