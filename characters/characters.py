@@ -43,6 +43,7 @@ class Character(pygame.sprite.Sprite):
 
         # Character specific variables
         # These will change depening on the character
+        self.gravity = 5
         self.maxJumps = 2
         self.jumpVelocity = 40
 
@@ -56,6 +57,7 @@ class Character(pygame.sprite.Sprite):
         self.jumpsRemaining = self.maxJumps
         self.isOnGround = False
 
+# ================== Display Functions ==================
     def displayPlayerName(self):
         self.playerNameLabel.display(str(self.playerName), 45) 
         newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5, self.rect.centery - (4/5.)*self.rect.height, 200, 100)
@@ -69,10 +71,7 @@ class Character(pygame.sprite.Sprite):
         self.damageLabel.display(str(self.damage) + '%', 55) 
         self.game.screen.blit(self.damageLabel.image, pygame.Rect(75, 120, 100, 100))
 
-    def move(self, button):
-        """Function to handle movement from input"""
-        pass
-
+# ================= Movement functions ====================
     def jump(self):
         if self.jumpsRemaining > 0:
             print 'Jumping'
@@ -88,7 +87,7 @@ class Character(pygame.sprite.Sprite):
         newProjectile = Projectile(self.rect.center)
         self.projectiles.append(newProjectile)
 
-    def mapCollision(self):
+    def platformCollision(self):
         c = self.rect
         m = self.game.platform.rect
 
@@ -102,12 +101,16 @@ class Character(pygame.sprite.Sprite):
         if c.left > m.right: right = True
         if c.right < m.left: left = True
         if above or below or left or right:
-            if left:
+            if left and not above:
                 self.offLeft = True
-            if right:
+            if right and not above:
                 self.offRight = True
-            return False # There is no collision
+            self.ypos += self.yvel
+
+        self.rect.center = (self.xpos, self.ypos)
+        c = self.rect
         
+        # Check if the character is on the platform
         if c.bottom >= m.top and c.top < m.top and self.offRight == False and self.offLeft == False:
             self.jumpsRemaining = self.maxJumps
             self.ypos = m.top - c.height/2
@@ -124,12 +127,9 @@ class Character(pygame.sprite.Sprite):
                 self.xpos -= 10
             leftCollision = True
 
-    def gravity(self):
+    def moveVertical(self):
         #Apply gravity
-        gravity = 5
-        if not self.mapCollision():
-            self.yvel += gravity
-            self.ypos += self.yvel
+        self.yvel += self.gravity
         
     def checkDeath(self):
         """Chacks if a user is dead or not"""
@@ -172,7 +172,8 @@ class Character(pygame.sprite.Sprite):
         elif keys[K_RIGHT]:
             self.moveRight(True)
 
-        self.gravity()
+        self.moveVertical()
+        self.platformCollision()
 
         #Get the attacks/jumping movement
         for event in pygame.event.get():
