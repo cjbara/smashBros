@@ -11,16 +11,18 @@ from twisted.internet.defer import DeferredQueue
 class Server(object):
 	def __init__(self):
 		self.port_1 = 40062
-		#self.port_2 = 40080
+		self.port_2 = 40063
 		self.data_port_1 = 41062
-		#self.data_port_2 = 41080
+		self.data_port_2 = 41063
 		self.queue = DeferredQueue()
 		self.p2_queue = DeferredQueue()
 		self.playersConnected = 0
 
 	def listen(self):
-		reactor.listenTCP(self.port_1, CommandConnFactory(self, 1))
-		#reactor.listenTCP(self.port_2, CommandConnFactory(self, 2))
+		self.player1 = CommandConnFactory(self, 1)
+		self.player2 = CommandConnFactory(self, 2)
+		reactor.listenTCP(self.port_1, self.player1)
+		reactor.listenTCP(self.port_2, self.player2)
 		reactor.run()
 
 #======================================================================
@@ -35,16 +37,15 @@ class CommandConn(Protocol):
 		# Add callback
 		self.server.playersConnected += 1
 		if self.server.playersConnected == 2:
+			print 'Two connections made, sending data connections'
 			# Create the two data connections
 			reactor.listenTCP(self.server.data_port_1, DataConnFactory(self.server, 1))
 			reactor.listenTCP(self.server.data_port_2, DataConnFactory(self.server, 2))
-			self.server.queue.get().addCallback(self.tellPlayersToConnect)
+			self.transport.write(data)
+			self.server.player1.transport.write(data)
 
 	def connectionLost(self, reason):
 		print 'Command connection lost from player', self.player
-
-	def tellPlayersToConnect(self, data):
-		self.transport.write(data)
 
 #======================================================================
 class CommandConnFactory(Factory):

@@ -36,7 +36,8 @@ class CommandConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""
-		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
+		print 'Received data, making data connection'
+		#reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
 
 #======================================================================
 class CommandConnFactory(ClientFactory):
