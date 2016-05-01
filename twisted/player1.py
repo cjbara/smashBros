@@ -2,6 +2,7 @@
 # Cory Jbara
 # player 1
 
+import json
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Protocol
@@ -38,7 +39,7 @@ class CommandConn(Protocol):
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""
 		print 'Received data, making data connection', data
-		#reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
+		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
 
 #======================================================================
 class CommandConnFactory(ClientFactory):
@@ -58,21 +59,20 @@ class DataConn(Protocol):
 
 	def connectionMade(self):
 		print 'Data connection made to SERVER'
-		# Add callback
-		self.player.home_queue.get().addCallback(self.sendToHome)
-		reactor.connectTCP(self.player.student_server, self.player.student_port, ConnToStudentFactory(self.player, self))
+		self.sendToServer('a;slkdjf')
 
 	def connectionLost(self, reason):
 		print 'Data connection lost to HOME'
 
 	def dataReceived(self, data):
 		"""Data received from home connection, forward to student"""
-		self.player.student_queue.put(data)
+		print 'data received:', data
 
-	def sendToHome(self, data):
-		print 'Sending data to HOME'
-		self.transport.write(data)
-		self.player.home_queue.get().addCallback(self.sendToHome)
+	def sendToServer(self, data):
+		print 'Sending data to Server'
+		data = {'a':0, 'b':1, 'j':0, 'l':0, 'r':1, 'u':0, 'd':0}
+		self.transport.write(json.dumps(data))
+		#self.player.home_queue.get().addCallback(self.sendToHome)
 
 #======================================================================
 class DataConnFactory(ClientFactory):
@@ -81,7 +81,7 @@ class DataConnFactory(ClientFactory):
 		self.number = number
 
 	def buildProtocol(self, addr):
-		return DataConnToHome(addr, self.player, self.number)
+		return DataConn(addr, self.player, self.number)
 
 #======================================================================
 if __name__ == '__main__':
