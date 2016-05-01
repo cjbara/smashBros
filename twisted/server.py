@@ -11,16 +11,16 @@ from twisted.internet.defer import DeferredQueue
 class Server(object):
 	def __init__(self):
 		self.port_1 = 40062
-		self.port_2 = 40080
+		#self.port_2 = 40080
 		self.data_port_1 = 41062
-		self.data_port_2 = 41080
+		#self.data_port_2 = 41080
 		self.queue = DeferredQueue()
 		self.p2_queue = DeferredQueue()
 		self.playersConnected = 0
 
 	def listen(self):
 		reactor.listenTCP(self.port_1, CommandConnFactory(self, 1))
-		reactor.listenTCP(self.port_2, CommandConnFactory(self, 2))
+		#reactor.listenTCP(self.port_2, CommandConnFactory(self, 2))
 		reactor.run()
 
 #======================================================================
