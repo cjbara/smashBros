@@ -17,7 +17,6 @@ class Server(object):
 		self.queue = DeferredQueue()
 		self.p2_queue = DeferredQueue()
 		self.playersConnected = 0
-		self.
 
 	def listen(self):
 		reactor.listenTCP(self.port_1, CommandConnFactory(self, 1))
