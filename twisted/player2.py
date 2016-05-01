@@ -23,9 +23,10 @@ class Player(object):
 
 #======================================================================
 class CommandConn(Protocol):
-	def __init__(self, addr, player):
+	def __init__(self, addr, player, number):
 		self.addr = addr
 		self.player = player
+		self.number = number
 
 	def connectionMade(self):
 		print 'Command connection made to SERVER, waiting for other player'
@@ -35,21 +36,23 @@ class CommandConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""
-		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player))
+		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
 
 #======================================================================
 class CommandConnFactory(ClientFactory):
-	def __init__(self, player):
+	def __init__(self, player, number):
 		self.player = player
+		self.playerNumber = number
 
 	def buildProtocol(self, addr):
-		return CommandConn(addr, self.player)
+		return CommandConn(addr, self.player, self.playerNumber)
 
 #======================================================================
 class DataConn(Protocol):
-	def __init__(self, addr, player):
+	def __init__(self, addr, player, number):
 		self.addr = addr
 		self.player = player
+		self.number = number
 
 	def connectionMade(self):
 		print 'Data connection made to SERVER'
@@ -71,11 +74,12 @@ class DataConn(Protocol):
 
 #======================================================================
 class DataConnFactory(ClientFactory):
-	def __init__(self, player):
+	def __init__(self, player, number):
 		self.player = player
+		self.number = number
 
 	def buildProtocol(self, addr):
-		return DataConnToHome(addr, self.player)
+		return DataConnToHome(addr, self.player, self.number)
 
 #======================================================================
 if __name__ == '__main__':
