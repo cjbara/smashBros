@@ -41,8 +41,8 @@ class CommandConn(Protocol):
 			# Create the two data connections
 			reactor.listenTCP(self.server.data_port_1, DataConnFactory(self.server, 1))
 			reactor.listenTCP(self.server.data_port_2, DataConnFactory(self.server, 2))
-			self.transport.write(data)
-			self.server.player1.transport.write(data)
+			self.transport.write('Make data connection')
+			self.server.player1.transport.write('Make data connection')
 
 	def connectionLost(self, reason):
 		print 'Command connection lost from player', self.player
