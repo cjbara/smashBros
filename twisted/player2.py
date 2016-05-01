@@ -1,5 +1,6 @@
 # Paradigms Twisted Primer
 # Cory Jbara
+# player 2
 
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
@@ -12,8 +13,8 @@ from twisted.internet.defer import DeferredQueue
 class Player(object):
 	def __init__(self):
 		self.server = 'student00.cse.nd.edu'
-		self.port_1 = 40080
-		self.data_port_1 = 41080
+		self.port_1 = 40063
+		self.data_port_1 = 41063
 		self.home_queue = DeferredQueue()
 		self.student_queue = DeferredQueue()
 
@@ -36,7 +37,8 @@ class CommandConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""
-		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
+		print 'data received from command conn, making data connection now'
+		#reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
 
 #======================================================================
 class CommandConnFactory(ClientFactory):

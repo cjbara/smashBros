@@ -1,5 +1,6 @@
 # Paradigms Twisted Primer
 # Cory Jbara
+# player 1
 
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
