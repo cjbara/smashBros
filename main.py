@@ -28,7 +28,8 @@ class Game(object):
             self.clock.tick(60)
         
             #5 Handle user input
-            #self.character.handleInput()
+            dataToSend = self.character.getKeysPressed()
+            # Send this data to the server
     
             #6 Tick all objects
             self.character.tick()

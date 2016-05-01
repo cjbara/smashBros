@@ -42,6 +42,9 @@ class Character(pygame.sprite.Sprite):
         self.startDamage = 0
         self.resetCharacter()
 
+        # Data variable to send to server
+        self.dataToSend = {}
+
         # General Variables
         self.lives = 3
         self.damage = self.startDamage
@@ -175,6 +178,37 @@ class Character(pygame.sprite.Sprite):
             self.xpos += 10
         else:
             self.xpos -= 10
+
+    def getKeysPressed(self):
+        # Reset the sendToServer
+        self.sendToServer = {'a': 0, 'b': 0, 'j': 0, 'l': 0, 'r': 0, 'u': 0, 'd': 0}    
+
+        # Get the right/left movement
+        keys = pygame.key.get_pressed()
+        if keys[K_LEFT] and keys[K_RIGHT]:
+            pass
+        elif keys[K_LEFT]:
+            self.sendToServer['l'] = 1
+        elif keys[K_RIGHT]:
+            self.sendToServer['r'] = 1
+        elif keys[K_UP]:
+            self.sendToServer['u'] = 1
+        elif keys[K_DOWN]:
+            self.sendToServer['d'] = 1
+
+        #Get the attacks/jumping movement
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                #If this is true, jump
+                if event.key == pygame.K_SPACE:
+                    self.sendToServer['j'] = 1
+                elif event.key == pygame.K_a:
+                    self.sendToServer['a'] = 1
+                elif event.key == pygame.K_s:
+                    self.sendToServer['b'] = 1
+
+        # Return the dictionary to send to server
+        return self.sendToServer
 
     def tick(self):
         # Get the right/left movement
