@@ -239,8 +239,6 @@ class Character(pygame.sprite.Sprite):
                     self.Aattack()
                 elif event.key == pygame.K_s:
                     self.Battack()
-                elif event.key == pygame.K_q:
-                    sys.exit()
         
         self.rect.center = (self.xpos, self.ypos)
         self.checkDeath()
