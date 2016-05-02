@@ -20,7 +20,7 @@ class Player(object):
 		self.data_port_1 = 41062
 		self.incoming_data_queue = DeferredQueue()
 		self.outgoing_data_queue = DeferredQueue()
-		self.game = Game(self)
+		#self.game = Game(self)
 
 	def connect(self):
 		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, 1))
@@ -63,8 +63,9 @@ class DataConn(Protocol):
 
 	def connectionMade(self):
 		print 'Data connection made to SERVER'
+		self.sendToServer('Hello')
 		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
-		self.player.game.main()
+		#self.player.game.main()
 
 	def connectionLost(self, reason):
 		print 'Data connection lost to HOME'
@@ -74,7 +75,7 @@ class DataConn(Protocol):
 		self.player.incoming_data_queue.put(data)
 
 	def sendToServer(self, data):
-		self.transport.write(json.dumps(data))
+		self.transport.write('Hello')#json.dumps(data))
 		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
 
 #======================================================================

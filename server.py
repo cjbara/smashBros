@@ -79,7 +79,7 @@ class DataConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received back from player"""
-		#print 'Received data from ', self.player, data
+		print 'Received data from ', self.player, data
 		self.server.data_array[self.player] = json.loads(data)
 		self.server.data_received[self.player] = True
 		if self.server.data_received['p1'] == self.server.data_received['p2'] == True:
