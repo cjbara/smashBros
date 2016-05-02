@@ -191,9 +191,9 @@ class Character(pygame.sprite.Sprite):
             self.sendToServer['l'] = 1
         elif keys[K_RIGHT]:
             self.sendToServer['r'] = 1
-        elif keys[K_UP]:
+        if keys[K_UP]:
             self.sendToServer['u'] = 1
-        elif keys[K_DOWN]:
+        if keys[K_DOWN]:
             self.sendToServer['d'] = 1
 
         #Get the attacks/jumping movement
@@ -206,11 +206,13 @@ class Character(pygame.sprite.Sprite):
                     self.sendToServer['a'] = 1
                 elif event.key == pygame.K_s:
                     self.sendToServer['b'] = 1
+                elif event.key == pygame.K_q:
+                    sys.exit()
 
         # Return the dictionary to send to server
         return self.sendToServer
 
-    def tick(self):
+    def tick(self, dataReceived):
         # Get the right/left movement
         keys = pygame.key.get_pressed()
         if keys[K_LEFT] and keys[K_RIGHT]:
@@ -237,8 +239,6 @@ class Character(pygame.sprite.Sprite):
                     self.Aattack()
                 elif event.key == pygame.K_s:
                     self.Battack()
-                elif event.key == pygame.K_q:
-                    sys.exit()
         
         self.rect.center = (self.xpos, self.ypos)
         self.checkDeath()

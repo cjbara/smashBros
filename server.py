@@ -1,8 +1,10 @@
 # Cory Jbara
 import json
+import sys
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Protocol
+from twisted.protocols.basic import LineReceiver
 from twisted.internet.tcp import Port
 from twisted.internet import reactor
 from twisted.internet.defer import DeferredQueue
@@ -63,7 +65,7 @@ class CommandConnFactory(Factory):
 		return CommandConn(addr, self.server, self.player)
 
 #======================================================================
-class DataConn(Protocol):
+class DataConn(LineReceiver):
 	def __init__(self, addr, server, player):
 		self.addr = addr
 		self.server = server
@@ -73,22 +75,22 @@ class DataConn(Protocol):
 		print 'Data connection received from player', self.player
 
 	def connectionLost(self, reason):
-		print 'Data connection lost from WORK'
+		print 'Data connection lost from player', self.player
 
-	def dataReceived(self, data):
+	def lineReceived(self, line):
 		"""Data received back from player"""
-		#print 'Received data from ', self.player, data
-		self.server.data_array[self.player] = json.loads(data)
+		print 'Received data from', self.player, line
+		self.server.data_array[self.player] = json.loads(line)
 		self.server.data_received[self.player] = True
 		if self.server.data_received['p1'] == self.server.data_received['p2'] == True:
-			#Received data from both players, send back to the players
 			self.sendToPlayer(self.server.data_array)
 			self.server.data_queue.put(self.server.data_array)
 		else:
 			self.server.data_queue.get().addCallback(self.sendToPlayer)
 
 	def sendToPlayer(self, data):
-		self.transport.write(json.dumps(data))
+		print 'Sending array to both players'
+		self.sendLine(json.dumps(data))
 		self.server.data_received[self.player] = False
 
 #======================================================================
