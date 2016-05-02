@@ -45,6 +45,8 @@ class Projectile(pygame.sprite.Sprite):
 	def disappear(self):
 		self.image = pygame.image.load("smash/media/empty.png")
 
+	def getDirection(self):
+		return self.isFacingLeft
 # ====================== Movement functions ===================
 
 
