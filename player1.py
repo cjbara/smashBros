@@ -74,7 +74,6 @@ class DataConn(Protocol):
 
 	def sendToServer(self, data):
 		print data
-		#data = {'a':0, 'b':1, 'j':0, 'l':0, 'r':1, 'u':0, 'd':0}
 		self.transport.write(json.dumps(data))
 		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
 
