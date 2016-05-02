@@ -206,6 +206,8 @@ class Character(pygame.sprite.Sprite):
                     self.sendToServer['a'] = 1
                 elif event.key == pygame.K_s:
                     self.sendToServer['b'] = 1
+                elif event.key == pygame.K_q:
+                    sys.exit()
 
         # Return the dictionary to send to server
         return self.sendToServer
