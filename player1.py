@@ -37,6 +37,7 @@ class CommandConn(Protocol):
 
 	def connectionLost(self, reason):
 		print 'Command connection lost from SERVER'
+		sys.exit()
 
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""

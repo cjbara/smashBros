@@ -191,9 +191,9 @@ class Character(pygame.sprite.Sprite):
             self.sendToServer['l'] = 1
         elif keys[K_RIGHT]:
             self.sendToServer['r'] = 1
-        elif keys[K_UP]:
+        if keys[K_UP]:
             self.sendToServer['u'] = 1
-        elif keys[K_DOWN]:
+        if keys[K_DOWN]:
             self.sendToServer['d'] = 1
 
         #Get the attacks/jumping movement
