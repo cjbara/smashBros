@@ -16,8 +16,7 @@ class Player(object):
 		self.server = 'student00.cse.nd.edu'
 		self.port_1 = 40062
 		self.data_port_1 = 41062
-		self.home_queue = DeferredQueue()
-		self.student_queue = DeferredQueue()
+		self.data_queue = DeferredQueue()
 
 	def connect(self):
 		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, 1))
@@ -66,13 +65,17 @@ class DataConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received from home connection, forward to student"""
-		print 'data received:', data
+		self.player.data_queue.put(data)
 
 	def sendToServer(self, data):
 		print 'Sending data to Server'
 		data = {'a':0, 'b':1, 'j':0, 'l':0, 'r':1, 'u':0, 'd':0}
 		self.transport.write(json.dumps(data))
-		#self.player.home_queue.get().addCallback(self.sendToHome)
+		self.player.data_queue.get().addCallback(self.handleDataFromServer)
+
+	def handleDataFromServer(self, data):
+		"""Handles the data from the server, which includes data from both players"""
+		print data
 
 #======================================================================
 class DataConnFactory(ClientFactory):

@@ -1,6 +1,6 @@
 # Paradigms Twisted Primer
 # Cory Jbara
-# player 2
+# player 1
 
 import json
 from twisted.internet.protocol import Factory
@@ -16,8 +16,7 @@ class Player(object):
 		self.server = 'student00.cse.nd.edu'
 		self.port_1 = 40063
 		self.data_port_1 = 41063
-		self.home_queue = DeferredQueue()
-		self.student_queue = DeferredQueue()
+		self.data_queue = DeferredQueue()
 
 	def connect(self):
 		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, 2))
@@ -38,7 +37,7 @@ class CommandConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""
-		print 'data received from command conn, making data connection now with data:', data
+		print 'Received data, making data connection', data
 		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
 
 #======================================================================
@@ -59,20 +58,24 @@ class DataConn(Protocol):
 
 	def connectionMade(self):
 		print 'Data connection made to SERVER'
-		self.sendToServer('sl;kf')
+		self.sendToServer('a;slkdjf')
 
 	def connectionLost(self, reason):
 		print 'Data connection lost to HOME'
 
 	def dataReceived(self, data):
 		"""Data received from home connection, forward to student"""
-		print 'data received:', data
+		self.player.data_queue.put(data)
 
 	def sendToServer(self, data):
-		print 'Sending data to server'
-		data = {'a':1, 'b':0, 'j':0, 'l':0, 'r':0, 'u':1, 'd':0}
+		print 'Sending data to Server'
+		data = {'a':0, 'b':1, 'j':0, 'l':0, 'r':1, 'u':0, 'd':9}
 		self.transport.write(json.dumps(data))
-		#self.player.server_queue.get().addCallback(self.sendToServer)
+		self.player.data_queue.get().addCallback(self.handleDataFromServer)
+
+	def handleDataFromServer(self, data):
+		"""Handles the data from the server, which includes data from both players"""
+		print data
 
 #======================================================================
 class DataConnFactory(ClientFactory):
