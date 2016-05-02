@@ -16,7 +16,7 @@ class Projectile(pygame.sprite.Sprite):
         self.isFacingLeft = isFacingLeft
 
         # create the images
-        fireball = pygame.image.load("media/fireball.png")
+        fireball = pygame.image.load("smash/media/fireball.png")
         self.image = pygame.transform.scale(fireball, (60, 60))
         self.rect = pygame.Rect(0, 0, 60, 60)
 

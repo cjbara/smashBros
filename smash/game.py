@@ -6,7 +6,8 @@ sys.path.append('/afs/nd.edu/user37/cmc/Public/paradigms/python/local/lib/python
 import pygame
 from pygame.locals import *
 from pygame import font
-from characters import *
+from character import *
+from ground import *
 
 class Game(object):
 	def __init__(self, twisted):

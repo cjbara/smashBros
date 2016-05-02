@@ -3,7 +3,7 @@
 # player 1
 
 import json
-from main import *
+from game import *
 import sys
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
@@ -15,13 +15,13 @@ from twisted.internet.defer import DeferredQueue
 
 #======================================================================
 class Player(object):
-	def __init__(self):
+	def __init__(self, player, port):
 		self.server = 'student00.cse.nd.edu'
-		self.port_1 = 40000 + int(sys.argv[1])
-		self.data_port_1 = 41000 + int(sys.argv[1])
+		self.port_1 = 40000 + port
+		self.data_port_1 = 41000 + port
 		self.incoming_data_queue = DeferredQueue()
 		self.outgoing_data_queue = DeferredQueue()
-		self.playerNumber = 'p'+sys.argv[2]
+		self.playerNumber = 'p'+str(player)
 		if self.playerNumber == 'p1':
 			self.otherNumber = 'p2'
 		else:
@@ -29,7 +29,7 @@ class Player(object):
 		self.game = Game(self)
 
 	def connect(self):
-		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, sys.argv[2]))
+		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, self.playerNumber))
 		reactor.run()
 
 #======================================================================

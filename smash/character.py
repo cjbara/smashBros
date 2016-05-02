@@ -27,16 +27,16 @@ class Character(pygame.sprite.Sprite):
         self.game = game
 
         #create the images
-        self.red = pygame.image.load("media/red.png")
-        self.blue = pygame.image.load("media/blue.png")
-        self.green = pygame.image.load("media/green.png")
+        self.red = pygame.image.load("smash/media/red.png")
+        self.blue = pygame.image.load("smash/media/blue.png")
+        self.green = pygame.image.load("smash/media/green.png")
 
-        self.image = pygame.image.load("media/mario.png")
+        self.image = pygame.image.load("smash/media/mario.png")
         if self.playerName == 'p1':
-            self.imageLeft = pygame.image.load("media/mario.png")
+            self.imageLeft = pygame.image.load("smash/media/mario.png")
             self.imageRight = pygame.transform.flip(self.imageLeft, True, False)
         else:
-            self.imageRight = pygame.image.load("media/link.png")
+            self.imageRight = pygame.image.load("smash/media/link.png")
             self.imageLeft = pygame.transform.flip(self.imageRight, True, False)
         self.rect = self.image.get_rect()
 
