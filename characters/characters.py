@@ -210,7 +210,7 @@ class Character(pygame.sprite.Sprite):
         # Return the dictionary to send to server
         return self.sendToServer
 
-    def tick(self):
+    def tick(self, dataReceived):
         # Get the right/left movement
         keys = pygame.key.get_pressed()
         if keys[K_LEFT] and keys[K_RIGHT]:
