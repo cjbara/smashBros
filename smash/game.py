@@ -39,9 +39,11 @@ class Game(object):
 	def doAfterServerResponse(self, dataReceived):
 			self.twisted.incoming_data_queue.get().addCallback(self.doAfterServerResponse)
 			data = json.loads(dataReceived)
+
 			#6 Tick all objects
-			self.user.tick(data[self.twisted.playerNumber])
-			self.other.tick(data[self.twisted.otherNumber])
+			emptyList = []
+			self.user.tick(data[self.twisted.playerNumber], self.other.getProjectiles())
+			self.other.tick(data[self.twisted.otherNumber], self.user.getProjectiles())
 			
 			#7 Update screen display
 			self.screen.fill(self.black)

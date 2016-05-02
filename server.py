@@ -1,4 +1,4 @@
-# Cory Jbara
+# Cory Jbara, Madelyn Nelson
 import json
 import sys
 from twisted.internet.protocol import Factory
