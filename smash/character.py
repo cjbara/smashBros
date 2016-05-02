@@ -1,4 +1,5 @@
 import sys
+sys.path.append('/afs/nd.edu/user37/cmc/Public/paradigms/python/local/lib/python2.6/site-packages/pygame-1.9.1release-py2.6-linux-x86_64.egg')
 import os
 import pygame
 from pygame.locals import *
@@ -69,16 +70,22 @@ class Character(pygame.sprite.Sprite):
         self.jumpsRemaining = self.maxJumps
         self.isOnGround = False
 
+#================== Getters and Setters =================
+    def getProjectiles(self):
+		print 'getting projectiles of ', self.playerName
+		return self.projectiles
+
 # ================== Display Functions ==================
+
     def displayProjectiles(self):
-        # loop through projectiles
-        newProjectiles = [] 
+        # loop through this player's projectiles
+        updatedProjectiles = [] 
         for p in self.projectiles:
             if p.isOnScreen():
                 p.tick()
                 self.game.screen.blit(p.image, p.getRect())
-                newProjectiles.append(p) # dealloc unnecessary projectiles
-        self.projectiles = newProjectiles
+                updatedProjectiles.append(p) # dealloc unnecessary projectiles
+        self.projectiles = updatedProjectiles
 
     def displayPlayerName(self):
         self.playerNameLabel.display(str(self.playerName), 45) 
@@ -157,6 +164,14 @@ class Character(pygame.sprite.Sprite):
                 self.xpos -= 10
             leftCollision = True
 
+    def handleProjectileCollision(self, othersProjectiles):
+        # loop through other player's projectiles
+		c = self
+		for p in othersProjectiles:
+			if pygame.sprite.collide_rect(p, c):
+				p.disappear()
+				print 'collision!!!!'
+
     def moveVertical(self):
         # Apply gravity
         self.yvel += self.gravity
@@ -216,7 +231,7 @@ class Character(pygame.sprite.Sprite):
         # Return the dictionary to send to server
         return self.sendToServer
 
-    def tick(self, data):
+    def tick(self, data, othersProjectiles):
         # Get the right/left movement
         keys = pygame.key.get_pressed()
         if data['l']:
@@ -232,6 +247,7 @@ class Character(pygame.sprite.Sprite):
         self.updateImageDirection() # TODO doesn't really have to be updated every tick
         self.moveVertical()
         self.platformCollision()
+        self.handleProjectileCollision(othersProjectiles)
 
         if data['a']:
             self.Aattack()

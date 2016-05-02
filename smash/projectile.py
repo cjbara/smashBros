@@ -35,6 +35,9 @@ class Projectile(pygame.sprite.Sprite):
     def getRect(self):
         return self.rect
 
+    def disappear(self):
+    	self.image = pygame.image.load("smash/media/empty.png")
+
 # ====================== Movement functions ===================
 
 
