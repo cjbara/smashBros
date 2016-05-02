@@ -71,8 +71,8 @@ class Character(pygame.sprite.Sprite):
         self.isOnGround = False
 
 #================== Getters and Setters =================
+    
     def getProjectiles(self):
-		print 'getting projectiles of ', self.playerName
 		return self.projectiles
 
 # ================== Display Functions ==================
@@ -169,8 +169,11 @@ class Character(pygame.sprite.Sprite):
 		c = self
 		for p in othersProjectiles:
 			if pygame.sprite.collide_rect(p, c):
-				p.disappear()
-				print 'collision!!!!'
+				if not p.alreadyHit:
+					p.disappear()
+					self.damage += p.getDamage()
+					print 'collision!!!!'
+					p.alreadyHit = True
 
     def moveVertical(self):
         # Apply gravity
