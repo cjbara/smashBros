@@ -26,7 +26,6 @@ class Game(object):
 		self.other = Character(self.twisted.otherNumber, self)
 		self.platform = Ground(self)
 
-
 	def main(self):
 		#3 Start game loop
 			#4 Tick regulation
