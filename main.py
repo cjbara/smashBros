@@ -37,7 +37,7 @@ class Game(object):
 			self.twisted.incoming_data_queue.get().addCallback(self.doAfterServerResponse)
 	
 	def doAfterServerResponse(self, dataReceived):
-			print dataReceived
+			print 'dr',dataReceived
 			#6 Tick all objects
 			self.character.tick(dataReceived)
 			

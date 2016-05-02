@@ -1,5 +1,6 @@
 # Cory Jbara
 import json
+import sys
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Protocol
@@ -49,6 +50,7 @@ class CommandConn(Protocol):
 
 	def connectionLost(self, reason):
 		print 'Command connection lost from player', self.player
+		sys.exit()
 
 	def tellPlayerAboutConn(self, data):
 		self.transport.write(data)
