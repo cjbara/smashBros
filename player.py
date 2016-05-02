@@ -21,6 +21,11 @@ class Player(object):
 		self.data_port_1 = 41000 + int(sys.argv[1])
 		self.incoming_data_queue = DeferredQueue()
 		self.outgoing_data_queue = DeferredQueue()
+		self.playerNumber = 'p'+sys.argv[2]
+		if self.playerNumber == 'p1':
+			self.otherNumber = 'p2'
+		else:
+			self.otherNumber = 'p1'
 		self.game = Game(self)
 
 	def connect(self):
@@ -42,7 +47,7 @@ class CommandConn(Protocol):
 
 	def dataReceived(self, data):
 		"""Data received from server connection, this means two players have connected, so create a new DataConn"""
-		print 'Received data, making data connection', data
+		#print 'Received data, making data connection', data
 		reactor.connectTCP(self.player.server, self.player.data_port_1, DataConnFactory(self.player, self.number))
 
 #======================================================================
@@ -72,11 +77,11 @@ class DataConn(LineReceiver):
 
 	def lineReceived(self, line):
 		"""Data received from server, put it on queue"""
-		print 'Received', line
+		#print 'Received', line
 		self.player.incoming_data_queue.put(line)
 
 	def sendToServer(self, data):
-		print 'Sending', data
+		#print 'Sending', data
 		self.sendLine(json.dumps(data))
 		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
 

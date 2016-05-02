@@ -7,7 +7,7 @@ from labels import *
 from projectile import *
 
 class Character(pygame.sprite.Sprite):
-    def __init__(self, game=None):
+    def __init__(self, userNumber, game=None):
         # make labels
         self.livesLabel = Label() 
         self.damageLabel = Label() 
@@ -20,7 +20,7 @@ class Character(pygame.sprite.Sprite):
         self.projectiles = []
 
         # set player name
-        self.playerName = 'Player 1'
+        self.playerName = userNumber
 
         #initialize sprite object
         pygame.sprite.Sprite.__init__(self)
@@ -32,8 +32,12 @@ class Character(pygame.sprite.Sprite):
         self.green = pygame.image.load("media/green.png")
 
         self.image = pygame.image.load("media/mario.png")
-        self.marioImageLeft = pygame.image.load("media/mario.png")
-        self.marioImageRight = pygame.transform.flip(self.marioImageLeft, True, False)
+        if self.playerName == 'p1':
+            self.imageLeft = pygame.image.load("media/mario.png")
+            self.imageRight = pygame.transform.flip(self.imageLeft, True, False)
+        else:
+            self.imageRight = pygame.image.load("media/link.png")
+            self.imageLeft = pygame.transform.flip(self.imageRight, True, False)
         self.rect = self.image.get_rect()
 
         # Reset variables
@@ -91,24 +95,25 @@ class Character(pygame.sprite.Sprite):
 
     def updateImageDirection(self):
         if self.isFacingLeft:
-            self.image = self.marioImageLeft    
+            self.image = self.imageLeft    
         else:
-            self.image = self.marioImageRight    
+            self.image = self.imageRight    
 
 # ================= Movement functions ====================
     
     def jump(self):
         if self.jumpsRemaining > 0:
-            print 'Jumping'
+            #print 'Jumping'
             self.yvel = -1 * self.jumpVelocity
             self.ypos += self.yvel
             self.jumpsRemaining -= 1
 
     def Aattack(self):
-        print 'A attack'
+        #print 'A attack'
+        pass
 
     def Battack(self):
-        print 'B attack'
+        #print 'B attack'
         newProjectile = Projectile(self.rect.center, self.isFacingLeft)
         self.projectiles.append(newProjectile)
 
@@ -159,11 +164,10 @@ class Character(pygame.sprite.Sprite):
     def checkDeath(self):
         """Chacks if a user is dead or not"""
         if not self.game.screenRect.contains(self.rect):
-            print 'Death'
-            self.lives -= 1
-            if self.lives < 1:
-                sys.exit()
-            self.resetCharacter()
+            if self.lives > 0:
+            	print 'Death'
+                self.lives -= 1
+                self.resetCharacter()
 
     def resetCharacter(self):
         """Resets the character to the starting spot"""
@@ -191,9 +195,11 @@ class Character(pygame.sprite.Sprite):
             self.sendToServer['l'] = 1
         elif keys[K_RIGHT]:
             self.sendToServer['r'] = 1
-        if keys[K_UP]:
+        if keys[K_UP] and keys[K_DOWN]:
+            pass
+        elif keys[K_UP]:
             self.sendToServer['u'] = 1
-        if keys[K_DOWN]:
+        elif keys[K_DOWN]:
             self.sendToServer['d'] = 1
 
         #Get the attacks/jumping movement
@@ -206,39 +212,32 @@ class Character(pygame.sprite.Sprite):
                     self.sendToServer['a'] = 1
                 elif event.key == pygame.K_s:
                     self.sendToServer['b'] = 1
-                elif event.key == pygame.K_q:
-                    sys.exit()
 
         # Return the dictionary to send to server
         return self.sendToServer
 
-    def tick(self, dataReceived):
+    def tick(self, data):
         # Get the right/left movement
         keys = pygame.key.get_pressed()
-        if keys[K_LEFT] and keys[K_RIGHT]:
-            pass
-        elif keys[K_LEFT]:
+        if data['l']:
             self.isFacingLeft = True
             self.moveRight(False)
-        elif keys[K_RIGHT]:
+        elif data['r']:
             self.isFacingLeft = False
             self.moveRight(True)
-
+        if data['u']:
+            pass
+        elif data['d']:
+            pass
         self.updateImageDirection() # TODO doesn't really have to be updated every tick
-
         self.moveVertical()
         self.platformCollision()
 
-        #Get the attacks/jumping movement
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                #If this is true, jump
-                if event.key == pygame.K_SPACE:
-                    self.jump()
-                elif event.key == pygame.K_a:
-                    self.Aattack()
-                elif event.key == pygame.K_s:
-                    self.Battack()
-        
+        if data['a']:
+            self.Aattack()
+        if data['b']:
+            self.Battack()
+        if data['j']:
+            self.jump()
         self.rect.center = (self.xpos, self.ypos)
         self.checkDeath()

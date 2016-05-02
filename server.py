@@ -79,7 +79,7 @@ class DataConn(LineReceiver):
 
 	def lineReceived(self, line):
 		"""Data received back from player"""
-		print 'Received data from', self.player, line
+		#print 'Received data from', self.player, line
 		self.server.data_array[self.player] = json.loads(line)
 		self.server.data_received[self.player] = True
 		if self.server.data_received['p1'] == self.server.data_received['p2'] == True:
@@ -89,7 +89,7 @@ class DataConn(LineReceiver):
 			self.server.data_queue.get().addCallback(self.sendToPlayer)
 
 	def sendToPlayer(self, data):
-		print 'Sending array to both players'
+		#print 'Sending array to both players'
 		self.sendLine(json.dumps(data))
 		self.server.data_received[self.player] = False
 
