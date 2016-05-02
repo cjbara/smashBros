@@ -8,6 +8,7 @@ import sys
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Protocol
+from twisted.protocols.basic import LineReceiver
 from twisted.internet.tcp import Port
 from twisted.internet import reactor
 from twisted.internet.defer import DeferredQueue
@@ -16,14 +17,14 @@ from twisted.internet.defer import DeferredQueue
 class Player(object):
 	def __init__(self):
 		self.server = 'student00.cse.nd.edu'
-		self.port_1 = 40062
-		self.data_port_1 = 41062
+		self.port_1 = 40000 + int(sys.argv[1])
+		self.data_port_1 = 41000 + int(sys.argv[1])
 		self.incoming_data_queue = DeferredQueue()
 		self.outgoing_data_queue = DeferredQueue()
 		self.game = Game(self)
 
 	def connect(self):
-		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, 1))
+		reactor.connectTCP(self.server, self.port_1, CommandConnFactory(self, sys.argv[2]))
 		reactor.run()
 
 #======================================================================
@@ -54,7 +55,7 @@ class CommandConnFactory(ClientFactory):
 		return CommandConn(addr, self.player, self.playerNumber)
 
 #======================================================================
-class DataConn(Protocol):
+class DataConn(LineReceiver):
 	def __init__(self, addr, player, number):
 		self.addr = addr
 		self.player = player
@@ -69,12 +70,14 @@ class DataConn(Protocol):
 	def connectionLost(self, reason):
 		print 'Data connection lost to HOME'
 
-	def dataReceived(self, data):
+	def lineReceived(self, line):
 		"""Data received from server, put it on queue"""
-		self.player.incoming_data_queue.put(data)
+		print 'Received', line
+		self.player.incoming_data_queue.put(line)
 
 	def sendToServer(self, data):
-		self.transport.write(json.dumps(data))
+		print 'Sending', data
+		self.sendLine(json.dumps(data))
 		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
 
 #======================================================================

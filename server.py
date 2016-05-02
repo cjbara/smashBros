@@ -75,15 +75,14 @@ class DataConn(LineReceiver):
 		print 'Data connection received from player', self.player
 
 	def connectionLost(self, reason):
-		print 'Data connection lost from WORK'
+		print 'Data connection lost from player', self.player
 
-	def dataReceived(self, line):
+	def lineReceived(self, line):
 		"""Data received back from player"""
 		print 'Received data from', self.player, line
-		self.server.data_array[self.player] = line
+		self.server.data_array[self.player] = json.loads(line)
 		self.server.data_received[self.player] = True
 		if self.server.data_received['p1'] == self.server.data_received['p2'] == True:
-			#Received data from both players, send back to the players
 			self.sendToPlayer(self.server.data_array)
 			self.server.data_queue.put(self.server.data_array)
 		else:
@@ -91,7 +90,7 @@ class DataConn(LineReceiver):
 
 	def sendToPlayer(self, data):
 		print 'Sending array to both players'
-		self.transport.write(json.dumps(data))
+		self.sendLine(json.dumps(data))
 		self.server.data_received[self.player] = False
 
 #======================================================================

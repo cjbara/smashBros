@@ -26,9 +26,8 @@ class Game(object):
 
 	def main(self):
 		#3 Start game loop
-		#while(1):
 			#4 Tick regulation
-			self.clock.tick(1)
+			self.clock.tick(60)
 		
 			#5 Handle user input
 			dataToSend = self.character.getKeysPressed()
@@ -36,6 +35,7 @@ class Game(object):
 			self.twisted.outgoing_data_queue.put(dataToSend)
 	
 	def doAfterServerResponse(self, dataReceived):
+			self.twisted.incoming_data_queue.get().addCallback(self.doAfterServerResponse)
 			print 'dr',dataReceived
 			#6 Tick all objects
 			self.character.tick(dataReceived)
@@ -49,7 +49,14 @@ class Game(object):
 			self.character.displayPlayerName()
 			self.screen.blit(self.character.image, self.character.rect)
 			pygame.display.flip()
-			print 'end function'
+
+			#4 Tick regulation
+			self.clock.tick(60)
+		
+			#5 Handle user input
+			dataToSend = self.character.getKeysPressed()
+			# Send this data to the server
+			self.twisted.outgoing_data_queue.put(dataToSend)
 
 if __name__ == '__main__':
 	game = Game()
