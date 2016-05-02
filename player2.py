@@ -61,7 +61,7 @@ class DataConn(Protocol):
 
 	def connectionMade(self):
 		print 'Data connection made to SERVER'
-		self.outgoing_data_queue.get().addCallback(self.sendToServer)
+		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
 		self.player.game.main()
 
 	def connectionLost(self, reason):
@@ -72,10 +72,10 @@ class DataConn(Protocol):
 		self.player.incoming_data_queue.put(data)
 
 	def sendToServer(self, data):
-		print 'Sending data to Server'
+		print 'Sending data to Server', data
 		#data = {'a':0, 'b':1, 'j':0, 'l':0, 'r':1, 'u':0, 'd':0}
 		self.transport.write(json.dumps(data))
-		self.outgoing_data_queue.get().addCallback(self.sendToServer)
+		self.player.outgoing_data_queue.get().addCallback(self.sendToServer)
 
 #======================================================================
 class DataConnFactory(ClientFactory):
