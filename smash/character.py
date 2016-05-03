@@ -6,13 +6,17 @@ from pygame.locals import *
 from pygame import font
 from labels import *
 from projectile import *
+from attack import *
 
 class Character(pygame.sprite.Sprite):
-	def __init__(self, userNumber, game=None):
+	def __init__(self, userNumber, game=None, user=False):
 		# make labels
 		self.livesLabel = Label() 
 		self.damageLabel = Label() 
 		self.playerNameLabel = Label() 
+
+		# Is this the user?
+		self.user = user
 
 		# starts facing left
 		self.isFacingLeft = True
@@ -28,10 +32,6 @@ class Character(pygame.sprite.Sprite):
 		self.game = game
 
 		#create the images
-		self.red = pygame.image.load("smash/media/red.png")
-		self.blue = pygame.image.load("smash/media/blue.png")
-		self.green = pygame.image.load("smash/media/green.png")
-
 		self.image = pygame.image.load("smash/media/mario.png")
 		if self.playerName == 'p1':
 			self.imageLeft = pygame.image.load("smash/media/mario.png")
@@ -62,6 +62,13 @@ class Character(pygame.sprite.Sprite):
 		self.maxJumps = 2
 		self.jumpVelocity = 40
 
+		# Create a delay for every attack
+		# You can only do a particular attack  seconds
+		self.Adelay = 0
+		self.Bdelay = 0
+		self.maxAdelay = 20
+		self.maxBdelay = 20
+
 		# Create the physics engine for this character
 		self.offLeft = False
 		self.offRight = False
@@ -78,7 +85,6 @@ class Character(pygame.sprite.Sprite):
 		return self.projectiles
 
 # ================== Display Functions ==================
-
 	def displayProjectiles(self):
 		# loop through this player's projectiles
 		updatedProjectiles = [] 
@@ -89,17 +95,31 @@ class Character(pygame.sprite.Sprite):
 				updatedProjectiles.append(p) # dealloc unnecessary projectiles
 		self.projectiles = updatedProjectiles
 
+	def displayLabels(self):
+		if self.user:
+			self.u = 'You'
+		else:
+			self.u = 'Enemy'
+		self.displayPlayerName()
+		self.displayLives()
+		self.attack = Attack(self)
+		self.attack.show()
+
 	def displayPlayerName(self):
-		self.playerNameLabel.display(str(self.playerName), 45) 
-		newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5, self.rect.centery - (4/5.)*self.rect.height, 200, 100)
+		self.playerNameLabel.display(self.u, 45) 
+		newRect = pygame.Rect(self.rect.centerx, self.rect.centery - (4/5.)*self.rect.height, 200, 100)
 		self.game.screen.blit(self.playerNameLabel.image, newRect)
 
 	def displayLives(self):
-		self.livesLabel.display('Lives: ' + str(self.lives), 55) 
-		self.game.screen.blit(self.livesLabel.image, pygame.Rect(75, 60, 100, 100))
+		#self.livesLabel.display('Lives: ' + str(self.lives), 30) 
+		self.livesLabel.display(self.u+'\nLives: '+str(self.lives)+'\n'+str(self.damage)+'%', 45) 
+		if self.user:
+			self.game.screen.blit(self.livesLabel.image, pygame.Rect(75, 60, 100, 100))
+		else:
+			self.game.screen.blit(self.livesLabel.image, pygame.Rect(600, 60, 100, 100))
 
 	def displayDamage(self):
-		self.damageLabel.display(str(self.damage) + '%', 55) 
+		self.damageLabel.display(str(self.damage) + '%', 30) 
 		self.game.screen.blit(self.damageLabel.image, pygame.Rect(75, 120, 100, 100))
 
 	def updateImageDirection(self):
@@ -108,8 +128,7 @@ class Character(pygame.sprite.Sprite):
 		else:
 			self.image = self.imageRight    
 
-# ================= Movement functions ====================
-
+# ================= Attack functions ====================
 	def jump(self):
 		if self.jumpsRemaining > 0:
 			#print 'Jumping'
@@ -119,13 +138,18 @@ class Character(pygame.sprite.Sprite):
 
 	def Aattack(self):
 		#print 'A attack'
-		pass
+		if self.Adelay == 0:
+			self.attack = Attack(self)
+			self.attack.show()
 
 	def Battack(self):
 		#print 'B attack'
-		newProjectile = Projectile(self.rect.center, self.isFacingLeft)
-		self.projectiles.append(newProjectile)
+		if self.Bdelay == 0:
+			newProjectile = Projectile(self.rect.center, self.isFacingLeft)
+			self.projectiles.append(newProjectile)
+			self.Bdelay = self.maxBdelay
 
+# ================= Movement functions ====================
 	def platformCollision(self):
 		c = self.rect
 		m = self.game.platform.rect
@@ -178,7 +202,7 @@ class Character(pygame.sprite.Sprite):
 					self.userWasHit = True
 					self.userWasHitToLeft = p.getDirection()
 					self.damage += p.getDamage()
-					self.xvel = 1 * self.damage
+					self.xvel = .5 * self.damage
 
 	def handleHit(self, goLeft):
 		self.xvel -= self.friction
@@ -251,6 +275,12 @@ class Character(pygame.sprite.Sprite):
 		return self.sendToServer
 
 	def tick(self, data, othersProjectiles):
+		# decrement the delays after attacks
+		if self.Adelay > 0:
+			self.Adelay -= 1
+		if self.Bdelay > 0:
+			self.Bdelay -= 1
+
 		# Get the right/left movement
 		keys = pygame.key.get_pressed()
 		if data['l']:
