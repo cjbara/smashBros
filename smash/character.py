@@ -91,16 +91,25 @@ class Character(pygame.sprite.Sprite):
 
 	def displayPlayerName(self):
 		self.playerNameLabel.display(str(self.playerName), 45) 
-		newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5, self.rect.centery - (4/5.)*self.rect.height, 200, 100)
+		newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5,
+				self.rect.centery - (5/5.)*self.rect.height, 200, 100)
 		self.game.screen.blit(self.playerNameLabel.image, newRect)
 
 	def displayLives(self):
-		self.livesLabel.display('Lives: ' + str(self.lives), 55) 
-		self.game.screen.blit(self.livesLabel.image, pygame.Rect(75, 60, 100, 100))
+		if self.playerName == 'p1':
+			self.livesLabel.display('Lives: ' + str(self.lives), 55) 
+			self.game.screen.blit(self.livesLabel.image, pygame.Rect(75, 60, 100, 100))
+		else:
+			self.livesLabel.display('Lives: ' + str(self.lives), 55) 
+			self.game.screen.blit(self.livesLabel.image, pygame.Rect(850-175, 60, 100, 100))
 
 	def displayDamage(self):
-		self.damageLabel.display(str(self.damage) + '%', 55) 
-		self.game.screen.blit(self.damageLabel.image, pygame.Rect(75, 120, 100, 100))
+		if self.playerName == 'p1':
+			self.damageLabel.display(str(self.damage) + '%', 55) 
+			self.game.screen.blit(self.damageLabel.image, pygame.Rect(75, 120, 100, 100))
+		else:
+			self.damageLabel.display(str(self.damage) + '%', 55) 
+			self.game.screen.blit(self.damageLabel.image, pygame.Rect(1000-130, 120, 100, 100))
 
 	def updateImageDirection(self):
 		if self.isFacingLeft:
