@@ -6,7 +6,7 @@ from pygame import font
 from labels import *
 
 class Projectile(pygame.sprite.Sprite):
-	def __init__(self, startPos, isFacingLeft, game=None):
+	def __init__(self, startPos, isFacingLeft, playerName, game=None):
 		# initialize sprite object
 		pygame.sprite.Sprite.__init__(self)
 		self.game = game
@@ -16,11 +16,18 @@ class Projectile(pygame.sprite.Sprite):
 		self.isFacingLeft = isFacingLeft
 
 		# damage level for this projectile
-		self.damage = 7 # TODO make this a parameter
+		self.damage = 7 
 
 		# create the images
-		fireball = pygame.image.load("smash/media/fireball.png")
-		self.image = pygame.transform.scale(fireball, (60, 60))
+		if playerName == 'p2':
+			path = 'smash/media/arrow.png'
+			fireball = pygame.image.load(path)
+			self.image = pygame.transform.scale(fireball, (60, 60))
+			self.image = pygame.transform.flip(self.image, 1, 0)
+		else:
+			path = 'smash/media/fireball.png'
+			fireball = pygame.image.load(path)
+			self.image = pygame.transform.scale(fireball, (60, 60))
 		self.rect = pygame.Rect(0, 0, 60, 60)
 
 		# Reset variables

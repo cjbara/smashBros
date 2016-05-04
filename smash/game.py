@@ -66,7 +66,8 @@ class Game(object):
 	def updateScreen(self):
 			self.screen.fill(self.black)
 			self.screen.blit(self.background, pygame.Rect(0, 0, self.width, self.height))
-			pygame.draw.rect(self.screen, (0,0, 255), self.platform.rect)
+			self.screen.blit(self.platform.image, self.platform.rect)
+			#pygame.draw.rect(self.screen, (0,0, 255), self.platform.rect)
 			self.user.displayProjectiles()
 			self.other.displayProjectiles()
 			self.user.displayLabels()

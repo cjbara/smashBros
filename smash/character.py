@@ -6,7 +6,7 @@ from pygame.locals import *
 from pygame import font
 from labels import *
 from projectile import *
-from attack import *
+#from attack import *
 
 class Character(pygame.sprite.Sprite):
 	def __init__(self, userNumber, game=None, user=False):
@@ -38,7 +38,7 @@ class Character(pygame.sprite.Sprite):
 			self.imageLeft = pygame.image.load("smash/media/mario.png")
 			self.imageRight = pygame.transform.flip(self.imageLeft, True, False)
 		else:
-			self.imageRight = pygame.image.load("smash/media/link.png")
+			self.imageRight = pygame.image.load("smash/media/link8.png")
 			self.imageLeft = pygame.transform.flip(self.imageRight, True, False)
 		self.rect = self.image.get_rect()
 
@@ -103,8 +103,9 @@ class Character(pygame.sprite.Sprite):
 			self.u = 'Enemy'
 		self.displayPlayerName()
 		self.displayLives()
-		self.attack = Attack(self)
-		self.attack.show()
+		self.displayDamage()
+		#self.attack = Attack(self)
+		#self.attack.show()
 
 	def displayPlayerName(self):
 		# label hovering over each character
@@ -162,17 +163,17 @@ class Character(pygame.sprite.Sprite):
 			self.jumpsRemaining -= 1
 
 	def Aattack(self):
+		pass
 		#print 'A attack'
-		if self.Adelay == 0:
-			self.attack = Attack(self)
-			self.attack.show()
+		#if self.Adelay == 0:
+	#		self.attack = Attack(self)
+	#		self.attack.show()
 
 	def Battack(self):
 		#print 'B attack'
-		if self.Bdelay == 0:
-			newProjectile = Projectile(self.rect.center, self.isFacingLeft)
-			self.projectiles.append(newProjectile)
-			self.Bdelay = self.maxBdelay
+		newProjectile = Projectile(self.rect.center, self.isFacingLeft, self.playerName)
+		self.projectiles.append(newProjectile)
+		self.Bdelay = self.maxBdelay
 
 # ================= Movement functions ====================
 	def platformCollision(self):
@@ -227,7 +228,7 @@ class Character(pygame.sprite.Sprite):
 					self.userWasHit = True
 					self.userWasHitToLeft = p.getDirection()
 					self.damage += p.getDamage()
-					self.xvel = .5 * self.damage
+					self.xvel = 1 * self.damage
 
 	def handleHit(self, goLeft):
 		self.xvel -= self.friction
@@ -327,7 +328,8 @@ class Character(pygame.sprite.Sprite):
 			self.handleHit(self.userWasHitToLeft)
 
 		if data['a']:
-			self.Aattack()
+			pass
+			#self.Aattack()
 		if data['b']:
 			self.Battack()
 		if data['j']:
