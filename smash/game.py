@@ -29,8 +29,7 @@ class Game(object):
 
 		# Play music
 		pygame.mixer.init()
-		print os.path.exists('media/backgroundMusic.mp3')
-		pygame.mixer.music.load("../../smashBros/smash/media/backgroundMusic.wav")
+		pygame.mixer.music.load("smash/media/backgroundMusic.wav")
 		pygame.mixer.music.play()
 
 	def main(self):
