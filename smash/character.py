@@ -15,6 +15,8 @@ class Character(pygame.sprite.Sprite):
 		self.damageLabel = Label() 
 		self.playerNameLabel = Label() # the one that hovers over the character 
 		self.playerLabel = Label() # the static label at top of screen
+		self.gameOverLabel = Label()
+		self.playerLostLabel = Label()
 
 		# Is this the user?
 		self.user = user
@@ -251,7 +253,21 @@ class Character(pygame.sprite.Sprite):
 			if self.lives > 0:
 				print 'Death'
 				self.lives -= 1
-				self.resetCharacter()
+				if not self.lives == 0:
+					self.resetCharacter()
+
+	def checkGameOver(self):
+		if self.lives == 0:
+			self.gameOverLabel.display('GAME OVER!', 100) 
+			self.game.screen.blit(self.gameOverLabel.image, pygame.Rect(200, 300, 400, 400))
+			if self.playerName == 'p1':
+				self.playerLostLabel.display('Player 2 Won', 100) 
+				self.game.screen.blit(self.gameOverLabel.image, pygame.Rect(220, 400, 400, 400))
+			else:
+				self.playerLostLabel.display('Player 1 Won', 100) 
+				self.game.screen.blit(self.gameOverLabel.image, pygame.Rect(220, 400, 400, 400))
+				
+
 
 	def resetCharacter(self):
 		"""Resets the character to the starting spot"""

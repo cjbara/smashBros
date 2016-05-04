@@ -72,6 +72,8 @@ class Game(object):
 			self.other.displayProjectiles()
 			self.user.displayLabels()
 			self.other.displayLabels()
+			self.user.checkGameOver()
+			self.other.checkGameOver()
 			#self.user.displayLives()
 			#self.other.displayLives()
 			#self.user.displayDamage()
