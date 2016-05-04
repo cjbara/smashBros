@@ -16,6 +16,8 @@ class Game(object):
 
 		#1 Initialize game space
 		self.size = self.width, self.height = (1000,750)
+		self.background = pygame.image.load("smash/media/finalDestBackground.png")
+		self.background = pygame.transform.scale(self.background, (1000, 750))
 		self.black = (0,0,0)
 		self.screen = pygame.display.set_mode(self.size)
 		self.clock = pygame.time.Clock()
@@ -48,6 +50,7 @@ class Game(object):
 			
 			#7 Update screen display
 			self.screen.fill(self.black)
+			self.screen.blit(self.background, pygame.Rect(0, 0, self.width, self.height))
 			pygame.draw.rect(self.screen, (0,0, 255), self.platform.rect)
 			self.user.displayProjectiles()
 			self.other.displayProjectiles()
