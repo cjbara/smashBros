@@ -17,7 +17,7 @@ class Game(object):
 
 		#1 Initialize game space
 		self.size = self.width, self.height = (1000,750)
-		self.background = pygame.image.load("smash/media/finalDestBackground.png")
+		self.background = pygame.image.load("media/finalDestBackground.png")
 		self.background = pygame.transform.scale(self.background, (1000, 750))
 		self.black = (0,0,0)
 		self.screen = pygame.display.set_mode(self.size)
@@ -31,7 +31,7 @@ class Game(object):
 
 		# Play music
 		pygame.mixer.init()
-		pygame.mixer.music.load("smash/media/backgroundMusic.wav")
+		pygame.mixer.music.load("media/backgroundMusic.wav")
 		pygame.mixer.music.play()
 
 	def main(self):

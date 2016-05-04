@@ -9,7 +9,7 @@ class Label(pygame.sprite.Sprite):
         #initialize sprite object
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image = pygame.image.load("smash/media/red.png")
+        self.image = pygame.image.load("media/red.png")
 
         # Initialize font for labels
         pygame.font.init()

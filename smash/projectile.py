@@ -20,12 +20,13 @@ class Projectile(pygame.sprite.Sprite):
 
 		# create the images
 		if playerName == 'p2':
-			path = 'smash/media/arrow.png'
+			path = 'media/arrow.png'
 			fireball = pygame.image.load(path)
 			self.image = pygame.transform.scale(fireball, (60, 60))
-			self.image = pygame.transform.flip(self.image, 1, 0)
+			if isFacingLeft:
+				self.image = pygame.transform.flip(self.image, 1, 0)
 		else:
-			path = 'smash/media/fireball.png'
+			path = 'media/fireball.png'
 			fireball = pygame.image.load(path)
 			self.image = pygame.transform.scale(fireball, (60, 60))
 		self.rect = pygame.Rect(0, 0, 60, 60)
@@ -50,7 +51,7 @@ class Projectile(pygame.sprite.Sprite):
 		return self.damage
 
 	def disappear(self):
-		self.image = pygame.image.load("smash/media/empty.png")
+		self.image = pygame.image.load("media/empty.png")
 
 	def getDirection(self):
 		return self.isFacingLeft
