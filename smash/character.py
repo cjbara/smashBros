@@ -12,7 +12,8 @@ class Character(pygame.sprite.Sprite):
 		# make labels
 		self.livesLabel = Label() 
 		self.damageLabel = Label() 
-		self.playerNameLabel = Label() 
+		self.playerNameLabel = Label() # the one that hovers over the character 
+		self.playerLabel = Label() # the static label at top of screen
 
 		# starts facing left
 		self.isFacingLeft = True
@@ -90,10 +91,19 @@ class Character(pygame.sprite.Sprite):
 		self.projectiles = updatedProjectiles
 
 	def displayPlayerName(self):
+		# label hovering over each character
 		self.playerNameLabel.display(str(self.playerName), 45) 
 		newRect = pygame.Rect(self.rect.centerx - self.rect.width*.5,
 				self.rect.centery - (5/5.)*self.rect.height, 200, 100)
 		self.game.screen.blit(self.playerNameLabel.image, newRect)
+		
+		# static label at top of window
+		if self.playerName == 'p1':
+			self.playerLabel.display(str(self.playerName), 55) 
+			self.game.screen.blit(self.playerLabel.image, pygame.Rect(75, 0, 100, 100))
+		else:
+			self.playerLabel.display(str(self.playerName), 55) 
+			self.game.screen.blit(self.playerLabel.image, pygame.Rect(1000-130, 0, 100, 100))
 
 	def displayLives(self):
 		if self.playerName == 'p1':
