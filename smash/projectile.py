@@ -54,10 +54,10 @@ class Projectile(pygame.sprite.Sprite):
 		pass
 
 	def moveRight(self):
-		self.xpos += 15
+		self.xpos += 10
 
 	def moveLeft(self):
-		self.xpos -= 15
+		self.xpos -= 10
 
 	def checkOnScreen(self):
 		if (self.rect.centerx > 1000) or (self.rect.centerx < 0):
