@@ -16,5 +16,5 @@ class Label(pygame.sprite.Sprite):
     
     def display(self, text, fontSize):
         myfont = pygame.font.SysFont("monospace", int(fontSize))
-        label = myfont.render(str(text), 1, (255, 255, 255))
+        label = myfont.render(str(text), 1, (255, 255, 0))
         self.image = label
