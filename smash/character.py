@@ -261,11 +261,11 @@ class Character(pygame.sprite.Sprite):
 			self.gameOverLabel.display('GAME OVER!', 100) 
 			self.game.screen.blit(self.gameOverLabel.image, pygame.Rect(200, 300, 400, 400))
 			if self.playerName == 'p1':
-				self.playerLostLabel.display('Player 2 Won', 100) 
-				self.game.screen.blit(self.gameOverLabel.image, pygame.Rect(220, 400, 400, 400))
+				self.playerLostLabel.display('Player 2 Won', 80) 
+				self.game.screen.blit(self.playerLostLabel.image, pygame.Rect(190, 400, 400, 400))
 			else:
-				self.playerLostLabel.display('Player 1 Won', 100) 
-				self.game.screen.blit(self.gameOverLabel.image, pygame.Rect(220, 400, 400, 400))
+				self.playerLostLabel.display('Player 1 Won', 80) 
+				self.game.screen.blit(self.playerLostLabel.image, pygame.Rect(190, 400, 400, 400))
 				
 
 
