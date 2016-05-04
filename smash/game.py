@@ -6,6 +6,7 @@ sys.path.append('/afs/nd.edu/user37/cmc/Public/paradigms/python/local/lib/python
 import pygame
 from pygame.locals import *
 from pygame import font
+from pygame import mixer
 from character import *
 from ground import *
 
@@ -28,6 +29,10 @@ class Game(object):
 		self.other = Character(self.twisted.otherNumber, self)
 		self.platform = Ground(self)
 
+		# Play music
+		pygame.mixer.init()
+		pygame.mixer.music.load("smash/media/backgroundMusic.wav")
+		pygame.mixer.music.play()
 
 	def main(self):
 		#3 Start game loop
